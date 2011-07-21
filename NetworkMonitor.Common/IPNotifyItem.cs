@@ -8,17 +8,20 @@ namespace NetworkMonitor.Common
 {
     public class IPNotifyItem
     {
-        public PackageDirect m_direct;
+        public PackageDirect Director;
         public IPAddress SourceIP;
         public IPAddress DestIP;
-        public Protocol m_protocol;
-        public long m_len;
+        public Protocol ProtocolType;
+        public long Length;
+        public long MessageLength;
+        public string SourcePort;
+        public string DestPort;
 
         public string FLAG
         {
             get
             {
-                return string.Format("{0}_{1}_(2)", m_direct, SourceIP, DestIP);
+                return string.Format("{0}_{1}_(2)", Director, SourceIP, DestIP);
             }
         }
     }

@@ -20,18 +20,18 @@ namespace NetworkMonitor.App
         protected override void OnIPNotify(IPNotifyItem stat)
         {
             m_ColorConsole.TextColor(Color.Red);
-            if (PackageDirect.IN == stat.m_direct)
+            if (PackageDirect.IN == stat.Director)
             {
                 Console.WriteLine(
                     "接受数据\t源地址:{0}\t\t目的地址:{1}\t\t包大小:{2}",
-                    stat.SourceIP, stat.DestIP, stat.m_len);
+                    stat.SourceIP, stat.DestIP, stat.Length);
             }
             else
             {
                 m_ColorConsole.TextColor(Color.Green);
                 Console.WriteLine(
                     "发送数据\t源地址:{0}\t\t目的地址:{1}\t\t包大小:{2}",
-                    stat.SourceIP, stat.DestIP, stat.m_len);
+                    stat.SourceIP, stat.DestIP, stat.Length);
             }
         }
     }

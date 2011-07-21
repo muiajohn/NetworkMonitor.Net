@@ -95,6 +95,15 @@ namespace NetworkMonitor.Common
 
             foreach (SocketPacket p in packages)
             {
+                IPNotifyItem stat = new IPNotifyItem();
+                stat.SourceIP = p.SourceAddress;
+                stat.DestIP = p.DestinationAddress;
+                stat.Length = p.TotalLength;
+                stat.ProtocolType = p.ProtocolType;
+                stat.MessageLength = p.MessageLength;
+                stat.SourcePort = p.SourcePort;
+                stat.DestPort = p.DestinationPort;
+
                 if (IPAddress.Equals(p.SourceAddress, m_localbindaddress))
                 {//Send  
                     speed.nUpTotalLen += p.TotalLength;
@@ -119,12 +128,8 @@ namespace NetworkMonitor.Common
                             break;
                     }
 
-                    IPNotifyItem stat = new IPNotifyItem();
-                    stat.m_direct = PackageDirect.OUT;
-                    stat.SourceIP = p.SourceAddress;
-                    stat.DestIP = p.DestinationAddress;
-                    stat.m_len = p.TotalLength;
-                    stat.m_protocol = p.ProtocolType;
+                    stat.Director = PackageDirect.OUT;
+
                     if (m_ipnotify != null)
                         m_ipnotify.Invoke(stat);
                 }
@@ -152,12 +157,8 @@ namespace NetworkMonitor.Common
                             break;
                     }
 
-                    IPNotifyItem stat = new IPNotifyItem();
-                    stat.m_direct = PackageDirect.IN;
-                    stat.SourceIP = p.SourceAddress;
-                    stat.DestIP = p.DestinationAddress;
-                    stat.m_len = p.TotalLength;
-                    stat.m_protocol = p.ProtocolType;
+                    stat.Director = PackageDirect.IN;
+
                     if (m_ipnotify != null)
                         m_ipnotify.Invoke(stat);
                 }
