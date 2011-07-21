@@ -17,12 +17,32 @@ namespace NetworkMonitor.App
 
                 string bindingip = Console.ReadLine();
 
+                string[] bindingAddress;
+
+                if (bindingip.Contains(":"))
+                {
+                    bindingAddress = bindingip.Split(new char[] { ':' });
+                }
+                else
+                {
+                    bindingAddress = new string[] { bindingip };
+                }
+
                 NetProvider m_provider;
                 RawSocket m_socket;
 
-                m_provider = new NetProvider(bindingip);
-                m_socket = new RawSocket(AddressFamily.InterNetwork, m_provider);
-                m_socket.Start(bindingip);
+                m_provider = new NetProvider(bindingAddress[0]);
+
+                if (1 == bindingAddress.Length)
+                {
+                    m_socket = new RawSocket(AddressFamily.InterNetwork, m_provider);
+                }
+                else
+                {
+                    m_socket = new RawSocket(AddressFamily.InterNetwork, m_provider, Convert.ToInt32(bindingAddress[1]));
+                }
+
+                m_socket.Start(bindingAddress[0]);
             }
             catch (Exception eX)
             {
