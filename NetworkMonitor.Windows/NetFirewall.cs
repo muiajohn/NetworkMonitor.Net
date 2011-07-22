@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NetFwTypeLib;
+using System.Collections;
 
 namespace NetworkMonitor.Windows
 {
@@ -44,6 +45,36 @@ namespace NetworkMonitor.Windows
             {
                 m_NetFwMgr.LocalPolicy.CurrentProfile.FirewallEnabled = true;
             }
+        }
+
+        public void DisableFirewall()
+        {
+            if (IsFirewallEnabled)
+            {
+                m_NetFwMgr.LocalPolicy.CurrentProfile.FirewallEnabled = false;
+            }
+        }
+
+        public bool AuthorizeApplicationDefault(string title, string applicationPath)
+        {
+            // Create the type from prog id
+            Type type = Type.GetTypeFromProgID(PROGID_AUTHORIZED_APPLICATION);
+            INetFwAuthorizedApplication auth = Activator.CreateInstance(type)
+                as INetFwAuthorizedApplication;
+            auth.Name = title;
+            auth.ProcessImageFileName = applicationPath;
+            auth.Enabled = true;
+
+            try
+            {
+                m_NetFwMgr.LocalPolicy.CurrentProfile.AuthorizedApplications.Add(auth);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return true;
         }
 
         public bool AuthorizeApplication(string title, string applicationPath)
@@ -105,5 +136,21 @@ namespace NetworkMonitor.Windows
             return true;
         }
 
+        public bool IsInAuthorizeApplications(string title, string applicationPath)
+        {
+            IEnumerator enumer = m_NetFwMgr.LocalPolicy.CurrentProfile.AuthorizedApplications.GetEnumerator();
+
+            while (enumer.MoveNext())
+            {
+                INetFwAuthorizedApplication app = enumer.Current as INetFwAuthorizedApplication;
+
+                if (app.Name == title && app.ProcessImageFileName == applicationPath)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }
